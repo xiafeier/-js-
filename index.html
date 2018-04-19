@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>原生js 三级联动</title>
+<meta charset="utf-8">
+<body>
+省<select id='province' onchange="changeProvince()"></select>
+市<select id='city' onchange="changeCity()"></select>
+区<select id='area'></select>
+
+
+<script type="text/javascript">
+var arr = [
+	{'name' : '四川', 'child': [
+			{
+				'name': '广安','child': [{'name': '邻水'},{'name': '子中'}]
+			},
+			{
+				'name': '广元','child': [{'name': '水灵'},{'name': '浪子'}]
+			}
+		]
+	},
+	{'name' : '重庆', 'child': [
+			{
+				'name': '重庆','child': [{'name': '江北'},{'name': '渝北'},{'name': '大渡口'}]
+			},
+			{
+				'name': '测试','child': [{'name': '回兴'},{'name': '南平'},{'name': '工商学院'}]
+			}
+		]
+	},
+	{'name' : '北京', 'child': [
+			{
+				'name': '北京','child': [{'name': '朝阳'},{'name': '石景山'},{'name': '西单'}]
+			},
+			{
+				'name': '中央电视台','child': [{'name': '天安门'},{'name': '毛主席'},{'name': '小凳子'}]
+			}
+		]
+	}
+
+]
+	var provinceObj = document.getElementById("province");
+	var cityObj = document.getElementById("city");
+	var areaObj = document.getElementById("area");
+
+	function init(province, city, area){
+		var provinceStr = '', cityStr = '', areaStr = '';
+		
+
+		arr.map((item, index) => {
+			if(province == index) {
+				provinceStr += `<option value="${index}" selected>${item.name}</option>`;
+			} else {
+				provinceStr += `<option value="${index}">${item.name}</option>`;
+			}
+
+			if(index == province) {
+				//遍历城市，每次遍历前，清空城市数组
+				cityStr = '';
+				console.log(item.child)
+				item.child.map((value,key) => {
+					if( key == city) {
+						cityStr += `<option value="${key}" selected>${value.name}</option>`;
+					} else {
+						cityStr += `<option value="${key}">${value.name}</option>`;
+					}
+					
+					if(key == city) {
+						areaStr = '';
+						value.child.map((v, k) => {
+							if(k == area) {
+								areaStr += `<option value="${k}" selected>${v.name}</option>`;
+							} else {
+								areaStr += `<option value="${k}">${v.name}</option>`;
+							}	
+						})
+					}
+				})	
+			}
+		})
+		
+		provinceObj.innerHTML = provinceStr;
+		cityObj.innerHTML = cityStr;
+		areaObj.innerHTML = areaStr;
+		
+	}
+
+	init(0,1,1);
+
+	function changeProvince() {
+		var pIndex = provinceObj.selectedIndex;
+		init(pIndex,0,0);
+	}
+
+	function changeCity() {
+		console.log('__________')
+		var pIndex = provinceObj.selectedIndex;
+		var cIndex = cityObj.selectedIndex;
+		console.log(pIndex,cIndex)
+		init(pIndex,cIndex,0);
+	}
+
+</script>
+</body>
+</html>
